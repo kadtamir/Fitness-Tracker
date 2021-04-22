@@ -1,0 +1,9 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+body{
+  background-color:#d5f6f1;
+  /* background-color:#2abba8; */
+}
