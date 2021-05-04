@@ -1,6 +1,7 @@
 'use strict';
 const DBBuildup = require('./buildDB');
 const { v4 } = require('uuid');
+const moment = require('moment');
 // Express server dependencies
 const express = require('express');
 const app = express();
@@ -67,17 +68,51 @@ app.get('/api/get/trainee:ID', (req, res) => {
   });
 });
 
+// Check for valid username
+app.get('/validate:USERNAME', (req, res) => {
+  const username = req.params.USERNAME.slice(1); // Remove leading colon
+  const sqlSelect = `SELECT Username FROM credentials WHERE Username="${username}";`;
+  s.db.query(sqlSelect, (err, data) => {
+    if (err) res.send({ err, error: true });
+    else res.send({ data, error: false });
+  });
+});
 // Register a new trainee
 app.post('/register', (req, res) => {
-  const username = req.body.username;
-  const password = req.body.password;
+  const { username, password, date, gender, weight, height } = req.body;
+  const uid = generateID();
+  const lastUpdate = moment().format('YYYY-MM-DD hh:mm:ss');
   bcrypt.hash(password, saltRounds, (err, hash) => {
     if (err) res.send({ err, error: true });
     const sqlInsert =
       'INSERT INTO credentials (UID,Username,Pass) VALUES (?,?,?)';
-    s.db.query(sqlInsert, [generateID(), username, hash], (err, result) => {
-      if (err) res.send({ err, error: true });
-      else res.send({ result, error: false });
+    s.db.query(sqlInsert, [uid, username, hash], (err, result) => {
+      if (err) {
+        res.send({ err, error: true });
+        return;
+      } else {
+        res.send({ userId: uid, error: false });
+        // Set up trainee info
+        const traineeInsert =
+          'INSERT INTO trainee (TID,birthDate,Gender,Weight,Height,lastUpdated) VALUES (?,?,?,?,?,?)';
+        s.db.query(
+          traineeInsert,
+          [
+            uid,
+            moment(date).format('YYYY-MM-DD'),
+            gender,
+            weight,
+            height,
+            lastUpdate,
+          ],
+          (error, result) => {
+            if (error) {
+              res.send({ error, error: true });
+              return;
+            }
+          }
+        );
+      }
     });
   });
 });
@@ -91,8 +126,8 @@ app.post('/login', (req, res) => {
     if (result.length > 0) {
       bcrypt.compare(password, result[0].Pass, (error, response) => {
         if (response) {
-          req.session.user = result;
-          res.send(result);
+          // req.session.user = result;
+          res.send(result[0].UID);
         } else res.send({ message: 'Wrong Username or Password!' });
       });
     } else res.send({ message: "User Doesn't Exist!" });

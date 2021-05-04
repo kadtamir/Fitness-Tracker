@@ -41,7 +41,7 @@ class DBBuildup extends Server {
   }
 }
 
-const db = new DBBuildup(tablesStruct);
+// const db = new DBBuildup(tablesStruct);
 // db.deleteAllTables();
 // db.createAllTables();
 

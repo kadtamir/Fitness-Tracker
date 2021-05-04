@@ -1,5 +1,7 @@
-import * as React from 'react';
+import React from 'react';
+// import useDebounce from '../hooks/useDebounced';
 import moment from 'moment';
+import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form, Field } from 'formik';
 import { Button, LinearProgress, Typography } from '@material-ui/core';
@@ -20,11 +22,26 @@ const useStyles = makeStyles((theme) => ({
   gender: {
     width: '50%',
   },
+  btn: {
+    display: 'block',
+    margin: 'auto',
+    width: '80%',
+  },
 }));
 
-const Register = () => {
+const Register = ({ setUser }) => {
   const classes = useStyles();
-
+  const [taken, setTaken] = React.useState(false);
+  let timeout;
+  const isTaken = async (text) => {
+    if (timeout) clearTimeout(timeout);
+    timeout = setTimeout(async () => {
+      const response = await axios.get(
+        `http://localhost:3001/validate:${text}`
+      );
+      setTaken(!!response.data.data.length);
+    }, 500);
+  };
   return (
     <Formik
       initialValues={{
@@ -39,9 +56,13 @@ const Register = () => {
         const errors = {};
         if (!values.username) {
           errors.username = 'Required';
+        } else if (taken) {
+          errors.username = 'Username is already taken';
         }
         if (!values.password) {
           errors.password = 'Required';
+        } else if (values.password.length < 4) {
+          errors.password = 'Password must be at least 4 characters';
         }
         if (!values.weight || values.weight < 1) {
           errors.weight = 'Required';
@@ -49,19 +70,25 @@ const Register = () => {
         if (!values.height || values.height < 1) {
           errors.height = 'Required';
         }
-        if (values.date.year === moment().year) {
+        if (values.date.year() === moment().year()) {
           errors.date = 'Please set a valid birth date';
         }
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          setSubmitting(false);
-          alert(JSON.stringify(values, null, 2));
-        }, 500);
+        axios
+          .post('http://localhost:3001/register', values)
+          .then((response) => {
+            setUser(response.data.userId);
+            setSubmitting(false);
+          })
+          .catch((error) => {
+            console.log(error);
+            setSubmitting(false);
+          });
       }}
     >
-      {({ submitForm, isSubmitting, touched, errors }) => (
+      {({ submitForm, isSubmitting, setFieldValue, errors }) => (
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <Form>
             <Box margin={1}>
@@ -70,6 +97,10 @@ const Register = () => {
                 name="username"
                 type="text"
                 label="Username"
+                onChange={(e) => {
+                  isTaken(e.target.value);
+                  setFieldValue('username', e.target.value);
+                }}
               />
             </Box>
             <Box margin={1}>
@@ -132,12 +163,13 @@ const Register = () => {
             </Box>
             <Box margin={1}>
               <Button
-                variant="contained"
+                variant="outlined"
                 color="primary"
                 disabled={isSubmitting}
                 onClick={submitForm}
+                className={classes.btn}
               >
-                Submit
+                Register
               </Button>
             </Box>
           </Form>

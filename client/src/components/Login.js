@@ -1,5 +1,6 @@
 import React from 'react';
 // import PropTypes from 'prop-types'
+import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -29,8 +30,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = (props) => {
+const Login = ({ setUser }) => {
   const classes = useStyles();
+  const [userName, setUserName] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const handleSubmit = () => {
+    axios
+      .post('http://localhost:3001/login', { username: userName, password })
+      .then((response) => {
+        setUser(response.data);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+  };
   return (
     <form className={classes.root} autoComplete="off">
       <div className={classes.input}>
@@ -38,6 +51,8 @@ const Login = (props) => {
         <TextField
           id="username"
           label="Username"
+          value={userName}
+          onChange={(e) => setUserName(e.target.value)}
           variant="outlined"
           className={classes.textField}
         />
@@ -47,12 +62,19 @@ const Login = (props) => {
         <TextField
           id="password"
           label="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           variant="outlined"
           type="password"
           className={classes.textField}
         />
       </div>
-      <Button variant="outlined" color="primary" className={classes.btn}>
+      <Button
+        variant="outlined"
+        color="primary"
+        className={classes.btn}
+        onClick={handleSubmit}
+      >
         Login
       </Button>
     </form>

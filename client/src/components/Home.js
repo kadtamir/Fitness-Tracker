@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = () => {
+const Home = ({ user }) => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const handleChange = (_, newValue) => {
@@ -72,7 +72,7 @@ const Home = () => {
       </AppBar>
       <Container maxWidth="md">
         <TabPanel value={value} index={0}>
-          <Overview />
+          <Overview user={user} />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <Workouts />
