@@ -10,6 +10,7 @@ const theme = createMuiTheme({
   palette: {
     background: {
       paper: '#73DFD0',
+      default: '#eafaf8',
     },
   },
   typography: {

@@ -1,8 +1,9 @@
 import React from 'react';
-import Home from './components/Home';
+// import Home from './components/Home';
+import Authentication from './components/Authentication';
 
 function App() {
-  return <Home />;
+  return <Authentication />;
 }
 
 export default App;
