@@ -29,6 +29,7 @@ class DBBuildup extends Server {
         references
       );
     }
+    this.initializeExercises();
   }
   deleteAllTables() {
     // Delete tables (reverse order)
@@ -36,6 +37,22 @@ class DBBuildup extends Server {
     this.deleteTable('exercise');
     this.deleteTable('trainee');
     this.deleteTable('credentials');
+  }
+  initializeExercises() {
+    this.insertDataToTable(
+      'exercise',
+      tablesStruct.exercise.featuresNames,
+      tablesStruct.exercise.featuresTypes,
+      [
+        [1, 'Walking', 3.3],
+        [2, 'Running', 12.5],
+        [3, 'Swimming ', 12],
+        [4, 'Tennis', 7],
+        [5, 'Football', 10],
+        [6, 'Basketball', 8],
+        [7, 'Volleyball', 8],
+      ]
+    );
   }
 }
 

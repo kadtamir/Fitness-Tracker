@@ -86,7 +86,7 @@ const AddWorkout = (props) => {
           if (values.duration <= 0) {
             errors.duration = 'Required';
           }
-          if (values.distance < 0) {
+          if (values.select && values.select <= 3 && values.distance <= 0) {
             errors.distance = 'Required';
           }
           if (!values.location) {
@@ -102,7 +102,6 @@ const AddWorkout = (props) => {
             })
             .then((response) => {
               setSubmitting(false);
-              console.log(response);
             })
             .catch((error) => {
               alert(error);
@@ -164,7 +163,7 @@ const AddWorkout = (props) => {
                   <Field
                     component={TextField}
                     type="number"
-                    label="Duration"
+                    label="Duration[min]"
                     name="duration"
                   />
                 </Box>
@@ -173,7 +172,7 @@ const AddWorkout = (props) => {
                     <Field
                       component={TextField}
                       type="number"
-                      label="Distance"
+                      label="Distance[km]"
                       name="distance"
                     />
                   </Box>

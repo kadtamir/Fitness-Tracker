@@ -175,7 +175,7 @@ app.post('/api/workout/insert', (req, res) => {
       moment(date).format('YYYY-MM-DD hh:mm:ss'),
       duration,
       distance,
-      location,
+      location.toUpperCase(),
       feeling,
     ],
     (error, result) => {

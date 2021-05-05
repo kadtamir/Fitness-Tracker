@@ -114,15 +114,39 @@ class Server {
     });
   }
 
+  insertDataToTable(tableName, featuresNames, featuresTypes, values) {
+    let sql = `INSERT INTO ${tableName.toLowerCase()} (`;
+    featuresNames.forEach((col) => (sql += col + ','));
+    sql = sql.slice(0, -1) + ') VALUES ';
+    const rows = values.map((row) => {
+      return row
+        .map((val, index) => {
+          if (featuresTypes[index] === 'INT') {
+            return parseInt(val);
+          }
+          if (featuresTypes[index] === 'FLOAT') {
+            return parseFloat(val);
+          }
+          if (featuresTypes[index] === 'VARCHAR(255)') {
+            return `"${val}"`;
+          }
+          return val;
+        })
+        .join(',');
+    });
+    rows.forEach((val) => (sql += `(${val}), `));
+    sql = sql.slice(0, -2) + ';'; // remove last space and comma, close parenthesis
+    this.db.query(sql, (err) => {
+      if (err) throw err;
+      console.log('Inserted exercises');
+    });
+  }
+
   showTables(dbName) {
     this.con.query(`SHOW TABLES IN ${dbName.toLowerCase()}`, (err, res) => {
       if (err) throw err;
       console.log(res);
     });
-  }
-
-  insertDataToTable(tableName, dbName, data) {
-    // Will be implemented at a later time. Approved by mail from Hadas.
   }
 }
 

@@ -33,7 +33,7 @@ const tablesStruct = {
   },
   exercise: {
     featuresNames: ['EID', 'eType', 'MET'],
-    featuresTypes: ['VARCHAR(255)', 'VARCHAR(255)', 'FLOAT'],
+    featuresTypes: ['INT', 'VARCHAR(255)', 'FLOAT'],
     pks: ['EID'],
     fks: [],
     references: [],
@@ -53,10 +53,10 @@ const tablesStruct = {
     featuresTypes: [
       'VARCHAR(255)',
       'VARCHAR(255)',
-      'VARCHAR(255)',
+      'INT',
       'DATETIME',
       'INT',
-      'INT',
+      'FLOAT',
       'VARCHAR(255)',
       'INT',
     ],
