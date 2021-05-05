@@ -162,8 +162,31 @@ app.get('/api/get/calculator', (req, res) => {
 
 // Insert a new workout
 app.post('/api/workout/insert', (req, res) => {
-  // To be implemented once the front end is ready (verified by email with hadas)
-  console.log('Insert');
+  const wid = generateID();
+  const { select, feeling, location, duration, distance, date, id } = req.body;
+  const sqlInsert =
+    'INSERT INTO workout (WID,TID,EID,wDate,Duration,Distance,Location,Feeling) VALUES (?,?,?,?,?,?,?,?)';
+  s.db.query(
+    sqlInsert,
+    [
+      wid,
+      id,
+      select,
+      moment(date).format('YYYY-MM-DD hh:mm:ss'),
+      duration,
+      distance,
+      location,
+      feeling,
+    ],
+    (error, result) => {
+      if (error) {
+        res.send({ error, err: true });
+        return;
+      } else {
+        res.send({ result, error: false });
+      }
+    }
+  );
 });
 
 // Delete a workout

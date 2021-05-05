@@ -54,7 +54,7 @@ const tablesStruct = {
       'VARCHAR(255)',
       'VARCHAR(255)',
       'VARCHAR(255)',
-      'DATE',
+      'DATETIME',
       'INT',
       'INT',
       'VARCHAR(255)',

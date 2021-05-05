@@ -8,7 +8,6 @@ class DBBuildup extends Server {
     super.connectToServerDB('fitness');
     this.tables = tables;
   }
-
   createAllTables() {
     // Create all tables at once
     for (const table in tablesStruct) {
@@ -31,7 +30,6 @@ class DBBuildup extends Server {
       );
     }
   }
-
   deleteAllTables() {
     // Delete tables (reverse order)
     this.deleteTable('workout');
@@ -41,7 +39,7 @@ class DBBuildup extends Server {
   }
 }
 
-// const db = new DBBuildup(tablesStruct);
+const db = new DBBuildup(tablesStruct);
 // db.deleteAllTables();
 // db.createAllTables();
 

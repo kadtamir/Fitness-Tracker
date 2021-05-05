@@ -4,6 +4,7 @@ import Logo from '../images/logo.JPG';
 import TabPanel from './TabPanel';
 import Overview from './Overview';
 import Workouts from './Workouts';
+import AddWorkout from './AddWorkout';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -46,7 +47,7 @@ const Home = ({ user }) => {
   return (
     <React.Fragment>
       <AppBar position="static" className={classes.appbar}>
-        <Container maxWidth="md" className={classes.container}>
+        <Container maxWidth="lg" className={classes.container}>
           <img src={Logo} className={classes.logo} alt="MishaFit" />
           <Tabs
             value={value}
@@ -70,15 +71,15 @@ const Home = ({ user }) => {
           </Tabs>
         </Container>
       </AppBar>
-      <Container maxWidth="md">
+      <Container maxWidth="lg">
         <TabPanel value={value} index={0}>
-          <Overview user={user} />
+          <Overview />
         </TabPanel>
         <TabPanel value={value} index={1}>
           <Workouts />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          Item Three
+          <AddWorkout />
         </TabPanel>
         <TabPanel value={value} index={3}>
           Item Four
