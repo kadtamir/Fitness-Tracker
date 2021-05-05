@@ -91,6 +91,7 @@ app.post('/register', (req, res) => {
         res.send({ err, error: true });
         return;
       } else {
+        req.session.user = uid;
         res.send({ userId: uid, error: false });
         // Set up trainee info
         const traineeInsert =
@@ -126,11 +127,12 @@ app.post('/login', (req, res) => {
     if (result.length > 0) {
       bcrypt.compare(password, result[0].Pass, (error, response) => {
         if (response) {
-          // req.session.user = result;
-          res.send(result[0].UID);
-        } else res.send({ message: 'Wrong Username or Password!' });
+          req.session.user = result[0].UID;
+          res.send({ auth: true, userId: result[0].UID });
+        } else
+          res.send({ auth: false, message: 'Wrong Username or Password!' });
       });
-    } else res.send({ message: "User Doesn't Exist!" });
+    } else res.send({ auth: false, message: "User Doesn't Exist!" });
   });
 });
 

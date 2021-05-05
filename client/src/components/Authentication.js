@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Authentication = ({ setUser }) => {
+const Authentication = (props) => {
   const classes = useStyles();
   const [isRegistered, setIsRegistered] = React.useState(true);
   const handleChange = (value) => setIsRegistered(value);
@@ -48,11 +48,7 @@ const Authentication = ({ setUser }) => {
         <Button onClick={() => handleChange(false)}>Sign up</Button>
       </ButtonGroup>
       <Paper className={classes.container}>
-        {isRegistered ? (
-          <Login setUser={setUser} />
-        ) : (
-          <Register setUser={setUser} />
-        )}
+        {isRegistered ? <Login /> : <Register />}
       </Paper>
     </Container>
   );

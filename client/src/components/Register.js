@@ -1,7 +1,7 @@
 import React from 'react';
-// import useDebounce from '../hooks/useDebounced';
 import moment from 'moment';
 import axios from 'axios';
+import { useUserUpdate } from '../context/UserContext';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form, Field } from 'formik';
 import { Button, LinearProgress, Typography } from '@material-ui/core';
@@ -14,6 +14,8 @@ import Box from '@material-ui/core/Box';
 import ToggleButton from '@material-ui/lab/ToggleButton';
 import MaleIcon from '../images/male.png';
 import FemaleIcon from '../images/female.png';
+
+axios.defaults.withCredentials = true;
 
 const useStyles = makeStyles((theme) => ({
   icons: {
@@ -29,9 +31,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Register = ({ setUser }) => {
+const Register = (props) => {
   const classes = useStyles();
   const [taken, setTaken] = React.useState(false);
+  const updateUser = useUserUpdate();
   let timeout;
   const isTaken = async (text) => {
     if (timeout) clearTimeout(timeout);
@@ -79,8 +82,9 @@ const Register = ({ setUser }) => {
         axios
           .post('http://localhost:3001/register', values)
           .then((response) => {
-            setUser(response.data.userId);
+            // setAuth(true);
             setSubmitting(false);
+            updateUser(response.data.userId);
           })
           .catch((error) => {
             console.log(error);

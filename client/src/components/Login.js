@@ -1,11 +1,14 @@
 import React from 'react';
 // import PropTypes from 'prop-types'
+import { useUserUpdate } from '../context/UserContext';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import LockIcon from '@material-ui/icons/Lock';
+
+axios.defaults.withCredentials = true;
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,15 +33,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Login = ({ setUser }) => {
+const Login = (props) => {
   const classes = useStyles();
   const [userName, setUserName] = React.useState('');
   const [password, setPassword] = React.useState('');
+  const updateUser = useUserUpdate();
   const handleSubmit = () => {
     axios
       .post('http://localhost:3001/login', { username: userName, password })
       .then((response) => {
-        setUser(response.data);
+        if (response.data.auth) {
+          // setAuth(true);
+          updateUser(response.data.userId);
+        } else {
+          alert(response.data.message);
+        }
       })
       .catch((error) => {
         alert(error);
