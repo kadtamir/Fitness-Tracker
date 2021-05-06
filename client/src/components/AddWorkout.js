@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 const AddWorkout = (props) => {
   const classes = useStyles();
-  const userId = useUser();
+  const user = useUser();
   const [exerciseList, setExerciseList] = React.useState([]);
   React.useEffect(() => {
     axios.get('http://localhost:3001/api/get/allExercises').then((response) => {
@@ -98,7 +98,8 @@ const AddWorkout = (props) => {
           axios
             .post('http://localhost:3001/api/workout/insert', {
               ...values,
-              id: userId,
+              id: user.TID,
+              calories: (3.5 * user.Weight * values.duration) / 200,
             })
             .then((response) => {
               setSubmitting(false);

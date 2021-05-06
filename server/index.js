@@ -40,7 +40,9 @@ const s = new DBBuildup();
 // Generate unique base64 ID
 const generateID = () =>
   //Generates hex ID, removes decorations and converts it to base 64 for shorter IDs
-  Buffer.from(v4().replace('-', ''), 'hex').toString('base64');
+  Buffer.from(v4().replace('-', ''), 'hex')
+    .toString('base64')
+    .replace('/', '0');
 
 // Server routes - The frontend send requests to specific paths
 //and that is how the server knows what to do
@@ -61,7 +63,7 @@ app.get('/api/get/allWorkouts/:ID', (req, res) => {
 // Get trainee Info
 app.get('/api/get/trainee:ID', (req, res) => {
   const id = req.params.ID.slice(1); // Remove leading colon
-  const sqlSelect = `SELECT * FROM fitness.trainee WHERE TID=${id};`;
+  const sqlSelect = `SELECT * FROM fitness.trainee WHERE TID="${id}";`;
   s.db.query(sqlSelect, (err, data) => {
     if (err) res.send({ err, error: true });
     else res.send({ data, error: false });
@@ -163,9 +165,18 @@ app.get('/api/get/calculator', (req, res) => {
 // Insert a new workout
 app.post('/api/workout/insert', (req, res) => {
   const wid = generateID();
-  const { select, feeling, location, duration, distance, date, id } = req.body;
+  const {
+    select,
+    feeling,
+    location,
+    duration,
+    distance,
+    calories,
+    date,
+    id,
+  } = req.body;
   const sqlInsert =
-    'INSERT INTO workout (WID,TID,EID,wDate,Duration,Distance,Location,Feeling) VALUES (?,?,?,?,?,?,?,?)';
+    'INSERT INTO workout (WID,TID,EID,wDate,Duration,Distance,Calories,Location,Feeling) VALUES (?,?,?,?,?,?,?,?,?)';
   s.db.query(
     sqlInsert,
     [
@@ -175,6 +186,7 @@ app.post('/api/workout/insert', (req, res) => {
       moment(date).format('YYYY-MM-DD hh:mm:ss'),
       duration,
       distance,
+      calories,
       location.toUpperCase(),
       feeling,
     ],

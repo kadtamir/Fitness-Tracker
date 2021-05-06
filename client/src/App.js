@@ -19,7 +19,7 @@ const App = () => {
     });
   });
 
-  return user ? <Home /> : <Authentication />;
+  return user.TID ? <Home /> : <Authentication />;
 };
 
 export default App;

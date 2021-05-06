@@ -9,6 +9,8 @@ class DBBuildup extends Server {
     this.tables = tables;
   }
   createAllTables() {
+    // this.deleteAllTables();
+
     // Create all tables at once
     for (const table in tablesStruct) {
       const {
