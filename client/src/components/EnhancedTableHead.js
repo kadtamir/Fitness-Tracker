@@ -15,6 +15,12 @@ const headCells = [
     disablePadding: false,
     label: 'Duration(min)',
   },
+  {
+    id: 'Distance',
+    numeric: true,
+    disablePadding: false,
+    label: 'Distance(km)',
+  },
   { id: 'Calories', numeric: true, disablePadding: false, label: 'Calories' },
   {
     id: 'Location',

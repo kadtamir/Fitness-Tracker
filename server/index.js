@@ -47,13 +47,13 @@ const generateID = () =>
 // Server routes - The frontend send requests to specific paths
 //and that is how the server knows what to do
 
-// Show all workouts
-app.get('/api/get/allWorkouts/:ID', (req, res) => {
+// Get all workouts
+app.get('/api/get/allWorkouts:ID', (req, res) => {
   const id = req.params.ID.slice(1); // Remove leading colon
-  const sqlSelect = `SELECT wDate,eType,Location,Duration,Feeling,MET FROM trainee t
+  const sqlSelect = `SELECT WID,wDate,eType,Duration,Distance,Calories,Location,Feeling FROM trainee t
   JOIN workout w ON t.TID = w.TID
   JOIN exercise e ON e.EID=w.EID
-  WHERE t.TID=${id};`;
+  WHERE t.TID="${id}";`;
   s.db.query(sqlSelect, (err, data) => {
     if (err) res.send({ err, error: true });
     else res.send({ data, error: false });

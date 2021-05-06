@@ -13,11 +13,10 @@ const App = () => {
   React.useEffect(() => {
     axios.get('http://localhost:3001/login').then((response) => {
       if (response.data.loggedIn) {
-        // setAuth(true);
         updateUser(response.data.user);
       }
     });
-  });
+  }, [updateUser]);
 
   return user.TID ? <Home /> : <Authentication />;
 };

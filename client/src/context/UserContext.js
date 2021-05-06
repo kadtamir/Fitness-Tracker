@@ -15,14 +15,14 @@ export const UserProvider = ({ children }) => {
     Height: null,
     lastUpdated: null,
   });
-  const updateUser = (newUser) => {
+  const updateUser = React.useCallback((newUser) => {
     axios
       .get(`http://localhost:3001/api/get/trainee:${newUser}`)
       .then(({ data }) => {
         setUser(data.data[0]);
       })
       .catch((e) => alert(e));
-  };
+  }, []);
 
   return (
     <UserContext.Provider value={user}>

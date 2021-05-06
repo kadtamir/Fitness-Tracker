@@ -1,4 +1,7 @@
 import React from 'react';
+import axios from 'axios';
+import moment from 'moment';
+import { useUser } from '../context/UserContext';
 import EnhancedTableHead from './EnhancedTableHead';
 import EnhancedTableToolbar from './EnhancedTableToolbar';
 import { makeStyles } from '@material-ui/core/styles';
@@ -10,31 +13,6 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
-
-function createData(
-  id,
-  wDate,
-  eType,
-  Duration,
-  Calories,
-  Location,
-  Feeling,
-  MET
-) {
-  return { id, wDate, eType, Duration, Calories, Location, Feeling, MET };
-}
-
-const rows = [
-  createData(123, '3.1.2000', 'Running', 20, 100, 'Tel Aviv', 3, 2),
-  createData(223, '2.1.2000', 'Running', 20, 100, 'Tel Aviv', 3, 2),
-  createData(323, '2.1.2000', 'Running', 20, 100, 'Tel Aviv', 3, 2),
-  createData(423, '2.1.2000', 'Running', 20, 100, 'Tel Aviv', 3, 2),
-  createData(523, '2.1.2000', 'Running', 20, 100, 'Tel Aviv', 3, 2),
-  createData(623, '2.1.2000', 'Running', 20, 100, 'Tel Aviv', 3, 2),
-  createData(723, '2.1.2000', 'Running', 20, 100, 'Tel Aviv', 3, 2),
-  createData(823, '2.1.2000', 'Running', 20, 100, 'Tel Aviv', 3, 2),
-  createData(923, '2.1.2000', 'Running', 20, 100, 'Tel Aviv', 3, 2),
-];
 
 const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) return -1;
@@ -83,12 +61,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const EnhancedTable = () => {
+  const user = useUser();
   const classes = useStyles();
   const [order, setOrder] = React.useState('desc');
+  const [workouts, setWorkouts] = React.useState([]);
   const [orderBy, setOrderBy] = React.useState('wDate');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  React.useEffect(() => {
+    axios
+      .get(`http://localhost:3001/api/get/allWorkouts:${user.TID}`)
+      .then(({ data }) => {
+        setWorkouts(data.data);
+      })
+      .catch((e) => alert(e));
+  }, [user.TID]);
 
   const handleRequestSort = (_, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -98,7 +87,7 @@ const EnhancedTable = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.id);
+      const newSelecteds = workouts.map((n) => n.WID);
       setSelected(newSelecteds);
       return;
     }
@@ -137,7 +126,7 @@ const EnhancedTable = () => {
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, workouts.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -156,23 +145,23 @@ const EnhancedTable = () => {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={workouts.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(workouts, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const isItemSelected = isSelected(row.id);
+                  const isItemSelected = isSelected(row.WID);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.id)}
+                      onClick={(event) => handleClick(event, row.WID)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.id}
+                      key={row.WID}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -187,14 +176,14 @@ const EnhancedTable = () => {
                         scope="row"
                         padding="none"
                       >
-                        {row.wDate}
+                        {moment(row.wDate).format('DD/MM/YY HH:mm')}
                       </TableCell>
                       <TableCell align="left">{row.eType}</TableCell>
                       <TableCell align="left">{row.Duration}</TableCell>
                       <TableCell align="left">
-                        {(row.Duration * row.MET * 3.5) / 200}
-                        {/*Need to multiple by body weight! */}
+                        {row.Distance ? row.Distance : '-'}
                       </TableCell>
+                      <TableCell align="left">{row.Calories}</TableCell>
                       <TableCell align="left">{row.Location}</TableCell>
                       <TableCell align="left">{row.Feeling}</TableCell>
                     </TableRow>
@@ -211,7 +200,7 @@ const EnhancedTable = () => {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={workouts.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
