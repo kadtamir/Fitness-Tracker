@@ -1,7 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import axios from 'axios';
-import { getExercises } from '../utils/axiosFunctions';
+import { getExercises, getWorkoutDetails } from '../utils/axiosFunctions';
 import { useUser } from '../context/UserContext';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form, Field } from 'formik';
@@ -49,161 +48,169 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const AddWorkout = (props) => {
+const AddWorkout = ({
+  buttonText,
+  buttonAction,
+  workoutId,
+  stateManagment,
+}) => {
   const classes = useStyles();
   const user = useUser();
   const [exerciseList, setExerciseList] = React.useState([]);
+  const [workoutDetails, setWorkoutDetails] = React.useState({});
   React.useEffect(() => {
     getExercises(setExerciseList);
-  }, []);
+    if (workoutId !== 0) {
+      getWorkoutDetails(workoutId, setWorkoutDetails);
+    }
+  }, [workoutId]);
 
   return (
     <Container maxWidth="xs">
-      <Formik
-        initialValues={{
-          select: '',
-          feeling: '',
-          location: '',
-          duration: 0,
-          distance: 0,
-          date: moment(),
-        }}
-        validate={(values) => {
-          const errors = {};
-          if (!values.select) {
-            errors.select = 'Required';
+      {exerciseList.length && (workoutDetails.select || workoutId === 0) ? (
+        <Formik
+          initialValues={
+            workoutId
+              ? workoutDetails
+              : {
+                  select: '',
+                  feeling: '',
+                  location: '',
+                  duration: 0,
+                  distance: 0,
+                  date: moment(),
+                }
           }
-          if (!values.feeling) {
-            errors.feeling = 'Required';
-          }
-          if (values.duration <= 0) {
-            errors.duration = 'Required';
-          }
-          if (values.select && values.select <= 3 && values.distance <= 0) {
-            errors.distance = 'Required';
-          }
-          if (!values.location) {
-            errors.location = 'Required';
-          }
-          return errors;
-        }}
-        onSubmit={(values, { setSubmitting }) => {
-          axios
-            .post('http://localhost:3001/api/workout/insert', {
-              ...values,
-              id: user.TID,
-              calories: (3.5 * user.Weight * values.duration) / 200,
-            })
-            .then((response) => {
-              setSubmitting(false);
-            })
-            .catch((error) => {
-              alert(error);
-              setSubmitting(false);
+          validate={(values) => {
+            const errors = {};
+            if (!values.select) {
+              errors.select = 'Required';
+            }
+            if (!values.feeling) {
+              errors.feeling = 'Required';
+            }
+            if (values.duration <= 0) {
+              errors.duration = 'Required';
+            }
+            if (values.select && values.select <= 3 && values.distance <= 0) {
+              errors.distance = 'Required';
+            }
+            if (!values.location) {
+              errors.location = 'Required';
+            }
+            return errors;
+          }}
+          onSubmit={(values, { setSubmitting }) => {
+            buttonAction({ ...values, WID: workoutId }, user, {
+              ...stateManagment,
+              setSubmitting,
             });
-        }}
-      >
-        {({ submitForm, isSubmitting, values }) => (
-          <MuiPickersUtilsProvider utils={MomentUtils}>
-            <Form className={classes.container}>
-              <Box className={classes.selects}>
-                <Box margin={1} className={classes.exercise}>
-                  <Field
-                    component={TextField}
-                    type="text"
-                    name="select"
-                    label="Exercise"
-                    size="medium"
-                    defaultValue=""
-                    select
-                    variant="standard"
-                    margin="normal"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                    inputProps={{ placeholder: 'text' }}
-                  >
-                    {exerciseList.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Field>
+          }}
+        >
+          {({ submitForm, isSubmitting, values }) => (
+            <MuiPickersUtilsProvider utils={MomentUtils}>
+              <Form className={classes.container}>
+                <Box className={classes.selects}>
+                  <Box margin={1} className={classes.exercise}>
+                    <Field
+                      component={TextField}
+                      type="text"
+                      name="select"
+                      label="Exercise"
+                      size="medium"
+                      defaultValue=""
+                      select
+                      variant="standard"
+                      margin="normal"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                      inputProps={{ placeholder: 'text' }}
+                    >
+                      {exerciseList.map((option) => (
+                        <MenuItem key={option.value} value={option.value}>
+                          {option.label}
+                        </MenuItem>
+                      ))}
+                    </Field>
+                  </Box>
+                  <Box margin={1}>
+                    <Field
+                      component={TextField}
+                      type="text"
+                      name="feeling"
+                      label="Feeling"
+                      defaultValue=""
+                      select
+                      variant="standard"
+                      margin="normal"
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
+                    >
+                      {[1, 2, 3, 4, 5].map((option) => (
+                        <MenuItem key={option} value={option}>
+                          {option}
+                        </MenuItem>
+                      ))}
+                    </Field>
+                  </Box>
                 </Box>
-                <Box margin={1}>
-                  <Field
-                    component={TextField}
-                    type="text"
-                    name="feeling"
-                    label="Feeling"
-                    defaultValue=""
-                    select
-                    variant="standard"
-                    margin="normal"
-                    InputLabelProps={{
-                      shrink: true,
-                    }}
-                  >
-                    {[1, 2, 3, 4, 5].map((option) => (
-                      <MenuItem key={option} value={option}>
-                        {option}
-                      </MenuItem>
-                    ))}
-                  </Field>
-                </Box>
-              </Box>
-              <Box className={classes.selects}>
-                <Box margin={1}>
-                  <Field
-                    component={TextField}
-                    type="number"
-                    label="Duration[min]"
-                    name="duration"
-                  />
-                </Box>
-                {values.select && values.select <= 3 && (
+                <Box className={classes.selects}>
                   <Box margin={1}>
                     <Field
                       component={TextField}
                       type="number"
-                      label="Distance[km]"
-                      name="distance"
+                      label="Duration[min]"
+                      name="duration"
                     />
                   </Box>
-                )}
-              </Box>
-              <Box margin={1}>
-                <Field
-                  component={DateTimePicker}
-                  name="date"
-                  label="Time"
-                  format="DD-MM-YYYY HH:mm"
-                />
-              </Box>
-              <Box margin={1}>
-                <Field
-                  component={TextField}
-                  name="location"
-                  type="text"
-                  label="Location"
-                />
-              </Box>
-              {isSubmitting && <LinearProgress />}
-              <Box margin={1}>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  disabled={isSubmitting}
-                  onClick={submitForm}
-                  className={classes.btn}
-                >
-                  Add Workout
-                </Button>
-              </Box>
-            </Form>
-          </MuiPickersUtilsProvider>
-        )}
-      </Formik>
+                  {values.select && values.select <= 3 && (
+                    <Box margin={1}>
+                      <Field
+                        component={TextField}
+                        type="number"
+                        label="Distance[km]"
+                        name="distance"
+                      />
+                    </Box>
+                  )}
+                </Box>
+                <Box margin={1}>
+                  <Field
+                    component={DateTimePicker}
+                    name="date"
+                    label="Time"
+                    format="DD-MM-YYYY HH:mm"
+                  />
+                </Box>
+                <Box margin={1}>
+                  <Field
+                    component={TextField}
+                    name="location"
+                    type="text"
+                    label="Location"
+                  />
+                </Box>
+                {isSubmitting && <LinearProgress />}
+                <Box margin={1}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    disabled={isSubmitting}
+                    onClick={submitForm}
+                    className={classes.btn}
+                  >
+                    {buttonText}
+                  </Button>
+                </Box>
+              </Form>
+            </MuiPickersUtilsProvider>
+          )}
+        </Formik>
+      ) : (
+        <LinearProgress />
+      )}
     </Container>
   );
 };

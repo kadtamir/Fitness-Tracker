@@ -162,6 +162,16 @@ app.get('/api/get/calculator', (req, res) => {
   });
 });
 
+// Get workout details
+app.get('/api/get/Workout:ID', (req, res) => {
+  const id = req.params.ID.slice(1); // Remove leading colon
+  const sqlSelect = `SELECT EID,Feeling,Location,Duration,Distance,wDate FROM workout WHERE WID="${id}";`;
+  s.db.query(sqlSelect, (err, data) => {
+    if (err) res.send({ err, error: true });
+    else res.send({ data, error: false });
+  });
+});
+
 // Insert a new workout
 app.post('/api/workout/insert', (req, res) => {
   const wid = generateID();
@@ -196,8 +206,8 @@ app.post('/api/workout/insert', (req, res) => {
 // Delete a workout
 app.delete('/api/workout/delete', (req, res) => {
   const rowsIds = req.body.map((id) => `"${id}"`).join(',');
-  const sqlSelect = `DELETE FROM workout WHERE WID IN (${rowsIds});`;
-  s.db.query(sqlSelect, (err, data) => {
+  const sqlDelete = `DELETE FROM workout WHERE WID IN (${rowsIds});`;
+  s.db.query(sqlDelete, (err, data) => {
     if (err) res.send({ err, error: true });
     else res.send({ data, error: false });
   });
@@ -205,8 +215,17 @@ app.delete('/api/workout/delete', (req, res) => {
 
 // Update workout
 app.put('/api/workout/update', (req, res) => {
-  // To be implemented once the front end is ready (verified by email with hadas)
-  console.log('Delete');
+  const { select, feeling, location, duration, distance, calories, date, WID } =
+    req.body;
+  const sqlUpdate = `UPDATE workout SET EID=${select},wDate="${moment(
+    date
+  ).format(
+    'YYYY-MM-DD hh:mm:ss'
+  )}",Duration=${duration},Distance=${distance}, Calories=${calories},Location="${location.toUpperCase()}",Feeling=${feeling} WHERE WID="${WID}";`;
+  s.db.query(sqlUpdate, (err, data) => {
+    if (err) res.send({ err, error: true });
+    else res.send({ data, error: false });
+  });
 });
 
 // Run the server on the specified port

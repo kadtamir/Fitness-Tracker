@@ -1,5 +1,6 @@
 import React from 'react';
 // import PropTypes from 'prop-types';
+import { insertWorkout } from '../utils/axiosFunctions';
 import Logo from '../images/logo.JPG';
 import TabPanel from './TabPanel';
 import Overview from './Overview';
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = ({ user }) => {
+const Home = () => {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const handleChange = (_, newValue) => {
@@ -79,7 +80,11 @@ const Home = ({ user }) => {
           <Workouts />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <AddWorkout />
+          <AddWorkout
+            buttonText="Add Workout"
+            buttonAction={insertWorkout}
+            workoutId={0}
+          />
         </TabPanel>
         <TabPanel value={value} index={3}>
           Item Four
