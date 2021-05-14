@@ -72,7 +72,7 @@ const EnhancedTable = () => {
 
   React.useEffect(() => {
     getWorkouts(user.TID, setWorkouts);
-  }, [user.TID, setWorkouts]);
+  }, [user.TID]);
 
   const handleRequestSort = (_, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -129,6 +129,7 @@ const EnhancedTable = () => {
         <EnhancedTableToolbar
           selected={selected}
           updateList={() => getWorkouts(user.TID, setWorkouts)}
+          setSelected={setSelected}
         />
         <TableContainer>
           <Table

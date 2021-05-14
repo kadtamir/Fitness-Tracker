@@ -30,14 +30,17 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnhancedTableToolbar = ({ selected, updateList }) => {
+const EnhancedTableToolbar = ({ selected, updateList, setSelected }) => {
   const classes = useToolbarStyles();
   const numSelected = selected.length;
 
   const deleteRows = (ids) => {
     axios
       .delete('http://localhost:3001/api/workout/delete', { data: ids })
-      .then(() => updateList())
+      .then(() => {
+        updateList();
+        setSelected([]);
+      })
       .catch((e) => alert(e));
   };
   return (
