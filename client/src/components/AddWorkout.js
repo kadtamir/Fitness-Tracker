@@ -1,6 +1,7 @@
 import React from 'react';
 import moment from 'moment';
 import axios from 'axios';
+import { getExercises } from '../utils/axiosFunctions';
 import { useUser } from '../context/UserContext';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form, Field } from 'formik';
@@ -11,8 +12,6 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
-
-axios.defaults.withCredentials = true;
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -55,13 +54,7 @@ const AddWorkout = (props) => {
   const user = useUser();
   const [exerciseList, setExerciseList] = React.useState([]);
   React.useEffect(() => {
-    axios.get('http://localhost:3001/api/get/allExercises').then((response) => {
-      const exercises = response.data.data.map((exercise) => ({
-        value: exercise.EID,
-        label: exercise.eType,
-      }));
-      setExerciseList(exercises);
-    });
+    getExercises(setExerciseList);
   }, []);
 
   return (

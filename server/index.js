@@ -165,16 +165,8 @@ app.get('/api/get/calculator', (req, res) => {
 // Insert a new workout
 app.post('/api/workout/insert', (req, res) => {
   const wid = generateID();
-  const {
-    select,
-    feeling,
-    location,
-    duration,
-    distance,
-    calories,
-    date,
-    id,
-  } = req.body;
+  const { select, feeling, location, duration, distance, calories, date, id } =
+    req.body;
   const sqlInsert =
     'INSERT INTO workout (WID,TID,EID,wDate,Duration,Distance,Calories,Location,Feeling) VALUES (?,?,?,?,?,?,?,?,?)';
   s.db.query(
@@ -202,9 +194,13 @@ app.post('/api/workout/insert', (req, res) => {
 });
 
 // Delete a workout
-app.delete('/api/workout/delete/:wid', (req, res) => {
-  // To be implemented once the front end is ready (verified by email with hadas)
-  console.log('Delete');
+app.delete('/api/workout/delete', (req, res) => {
+  const rowsIds = req.body.map((id) => `"${id}"`).join(',');
+  const sqlSelect = `DELETE FROM workout WHERE WID IN (${rowsIds});`;
+  s.db.query(sqlSelect, (err, data) => {
+    if (err) res.send({ err, error: true });
+    else res.send({ data, error: false });
+  });
 });
 
 // Update workout

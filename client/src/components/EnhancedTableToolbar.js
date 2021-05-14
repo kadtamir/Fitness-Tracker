@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import PropTypes from 'prop-types';
 import { lighten, makeStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
@@ -29,10 +30,16 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnhancedTableToolbar = ({ selected }) => {
+const EnhancedTableToolbar = ({ selected, updateList }) => {
   const classes = useToolbarStyles();
   const numSelected = selected.length;
 
+  const deleteRows = (ids) => {
+    axios
+      .delete('http://localhost:3001/api/workout/delete', { data: ids })
+      .then(() => updateList())
+      .catch((e) => alert(e));
+  };
   return (
     <Toolbar
       className={clsx(classes.root, {
@@ -53,7 +60,7 @@ const EnhancedTableToolbar = ({ selected }) => {
           <Tooltip title="Delete">
             <IconButton
               aria-label="delete"
-              onClick={() => console.log(selected)}
+              onClick={() => deleteRows(selected)}
             >
               <DeleteIcon />
             </IconButton>

@@ -1,7 +1,7 @@
 import React from 'react';
-import axios from 'axios';
 import moment from 'moment';
 import { useUser } from '../context/UserContext';
+import { getWorkouts } from '../utils/axiosFunctions';
 import EnhancedTableHead from './EnhancedTableHead';
 import EnhancedTableToolbar from './EnhancedTableToolbar';
 import { makeStyles } from '@material-ui/core/styles';
@@ -71,13 +71,8 @@ const EnhancedTable = () => {
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
   React.useEffect(() => {
-    axios
-      .get(`http://localhost:3001/api/get/allWorkouts:${user.TID}`)
-      .then(({ data }) => {
-        setWorkouts(data.data);
-      })
-      .catch((e) => alert(e));
-  }, [user.TID]);
+    getWorkouts(user.TID, setWorkouts);
+  }, [user.TID, setWorkouts]);
 
   const handleRequestSort = (_, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -131,7 +126,10 @@ const EnhancedTable = () => {
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar selected={selected} />
+        <EnhancedTableToolbar
+          selected={selected}
+          updateList={() => getWorkouts(user.TID, setWorkouts)}
+        />
         <TableContainer>
           <Table
             className={classes.table}
