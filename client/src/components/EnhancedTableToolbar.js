@@ -1,7 +1,6 @@
 import React from 'react';
-import axios from 'axios';
 import PropTypes from 'prop-types';
-import { updateWorkout } from '../utils/axiosFunctions';
+import { updateWorkout, deleteRows } from '../utils/axiosFunctions';
 import TabPanel from './TabPanel';
 import AddWorkout from './AddWorkout';
 import { lighten, makeStyles } from '@material-ui/core/styles';
@@ -40,23 +39,9 @@ const EnhancedTableToolbar = ({ selected, updateList, setSelected }) => {
   const numSelected = selected.length;
   const [editModalState, setEditModalState] = React.useState(false);
 
-  const updateRow = () => {
-    setEditModalState(true);
-  };
+  const updateRow = () => setEditModalState(true);
 
-  const handleClose = () => {
-    setEditModalState(false);
-  };
-
-  const deleteRows = (ids) => {
-    axios
-      .delete('http://localhost:3001/api/workout/delete', { data: ids })
-      .then(() => {
-        updateList();
-        setSelected([]);
-      })
-      .catch((e) => alert(e));
-  };
+  const handleClose = () => setEditModalState(false);
 
   return (
     <React.Fragment>
@@ -79,7 +64,7 @@ const EnhancedTableToolbar = ({ selected, updateList, setSelected }) => {
             <Tooltip title="Delete">
               <IconButton
                 aria-label="delete"
-                onClick={() => deleteRows(selected)}
+                onClick={() => deleteRows(selected, updateList, setSelected)}
               >
                 <DeleteIcon />
               </IconButton>

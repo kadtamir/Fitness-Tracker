@@ -1,5 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
 import { insertWorkout } from '../utils/axiosFunctions';
 import Logo from '../images/logo.JPG';
 import TabPanel from './TabPanel';

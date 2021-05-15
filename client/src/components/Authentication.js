@@ -1,5 +1,4 @@
 import React from 'react';
-// import PropTypes from 'prop-types'
 import Logo from '../images/logo.JPG';
 import Login from './Login';
 import Register from './Register';
@@ -32,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Authentication = (props) => {
+const Authentication = () => {
   const classes = useStyles();
   const [isRegistered, setIsRegistered] = React.useState(true);
   const handleChange = (value) => setIsRegistered(value);

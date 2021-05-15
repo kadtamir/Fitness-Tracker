@@ -48,7 +48,7 @@ const generateID = () =>
 //and that is how the server knows what to do
 
 // Get all workouts
-app.get('/api/get/allWorkouts:ID', (req, res) => {
+app.get('/getAllWorkouts:ID', (req, res) => {
   const id = req.params.ID.slice(1); // Remove leading colon
   const sqlSelect = `SELECT WID,wDate,eType,Duration,Distance,Calories,Location,Feeling FROM trainee t
   JOIN workout w ON t.TID = w.TID
@@ -61,7 +61,7 @@ app.get('/api/get/allWorkouts:ID', (req, res) => {
 });
 
 // Get trainee Info
-app.get('/api/get/trainee:ID', (req, res) => {
+app.get('/getTrainee:ID', (req, res) => {
   const id = req.params.ID.slice(1); // Remove leading colon
   const sqlSelect = `SELECT * FROM fitness.trainee WHERE TID="${id}";`;
   s.db.query(sqlSelect, (err, data) => {
@@ -145,7 +145,7 @@ app.get('/login', (req, res) => {
 });
 
 // Get all possible exercises
-app.get('/api/get/allExercises', (req, res) => {
+app.get('/getAllExercises', (req, res) => {
   const sqlSelect = 'SELECT EID,eType FROM exercise;';
   s.db.query(sqlSelect, (err, data) => {
     if (err) res.send({ err, error: true });
@@ -154,7 +154,7 @@ app.get('/api/get/allExercises', (req, res) => {
 });
 
 // Get calorie calculator needed data
-app.get('/api/get/calculator', (req, res) => {
+app.get('/get/calculator', (req, res) => {
   const sqlSelect = 'SELECT eType,MET FROM exercise;';
   s.db.query(sqlSelect, (err, data) => {
     if (err) res.send({ err, error: true });
@@ -163,7 +163,7 @@ app.get('/api/get/calculator', (req, res) => {
 });
 
 // Get workout details
-app.get('/api/get/Workout:ID', (req, res) => {
+app.get('/workout/get:ID', (req, res) => {
   const id = req.params.ID.slice(1); // Remove leading colon
   const sqlSelect = `SELECT EID,Feeling,Location,Duration,Distance,wDate FROM workout WHERE WID="${id}";`;
   s.db.query(sqlSelect, (err, data) => {
@@ -173,7 +173,7 @@ app.get('/api/get/Workout:ID', (req, res) => {
 });
 
 // Insert a new workout
-app.post('/api/workout/insert', (req, res) => {
+app.post('/workout/insert', (req, res) => {
   const wid = generateID();
   const { select, feeling, location, duration, distance, calories, date, id } =
     req.body;
@@ -204,7 +204,7 @@ app.post('/api/workout/insert', (req, res) => {
 });
 
 // Delete a workout
-app.delete('/api/workout/delete', (req, res) => {
+app.delete('/workout/delete', (req, res) => {
   const rowsIds = req.body.map((id) => `"${id}"`).join(',');
   const sqlDelete = `DELETE FROM workout WHERE WID IN (${rowsIds});`;
   s.db.query(sqlDelete, (err, data) => {
@@ -214,7 +214,7 @@ app.delete('/api/workout/delete', (req, res) => {
 });
 
 // Update workout
-app.put('/api/workout/update', (req, res) => {
+app.put('/workout/update', (req, res) => {
   const { select, feeling, location, duration, distance, calories, date, WID } =
     req.body;
   const sqlUpdate = `UPDATE workout SET EID=${select},wDate="${moment(

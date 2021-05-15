@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios';
+import { contextUserUpdate } from '../utils/axiosFunctions';
 const UserContext = React.createContext();
 const UserUpdateContext = React.createContext();
 
@@ -16,12 +16,7 @@ export const UserProvider = ({ children }) => {
     lastUpdated: null,
   });
   const updateUser = React.useCallback((newUser) => {
-    axios
-      .get(`http://localhost:3001/api/get/trainee:${newUser}`)
-      .then(({ data }) => {
-        setUser(data.data[0]);
-      })
-      .catch((e) => alert(e));
+    contextUserUpdate(newUser, setUser);
   }, []);
 
   return (

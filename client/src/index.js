@@ -4,7 +4,6 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import { UserProvider } from './context/UserContext';
 import { ThemeProvider } from '@material-ui/styles';
-// import { createMuiTheme } from '@material-ui/core/styles';
 import { unstable_createMuiStrictModeTheme as createMuiTheme } from '@material-ui/core';
 
 const theme = createMuiTheme({
