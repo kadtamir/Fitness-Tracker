@@ -1,10 +1,10 @@
 import React from 'react';
 import { insertWorkout } from '../utils/axiosFunctions';
-import Logo from '../images/logo.JPG';
 import TabPanel from './TabPanel';
 import Overview from './Overview';
 import Workouts from './Workouts';
 import AddWorkout from './AddWorkout';
+import Logo from '../images/logo.JPG';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -66,8 +66,6 @@ const Home = () => {
               {...a11yProps(2)}
             />
             <Tab className={classes.tab} label="Calculator" {...a11yProps(3)} />
-            <Tab className={classes.tab} label="Item Five" {...a11yProps(4)} />
-            <Tab className={classes.tab} label="Item Six" {...a11yProps(5)} />
           </Tabs>
         </Container>
       </AppBar>
@@ -86,21 +84,11 @@ const Home = () => {
           />
         </TabPanel>
         <TabPanel value={value} index={3}>
-          Item Four
-        </TabPanel>
-        <TabPanel value={value} index={4}>
-          Item Five
-        </TabPanel>
-        <TabPanel value={value} index={5}>
-          Item Six
-        </TabPanel>
-        <TabPanel value={value} index={6}>
-          Item Seven
+          Calculator
         </TabPanel>
       </Container>
     </React.Fragment>
   );
 };
-Home.propTypes = {};
 
 export default Home;

@@ -116,6 +116,8 @@ const EnhancedTableToolbar = ({ selected, updateList, setSelected }) => {
 
 EnhancedTableToolbar.propTypes = {
   selected: PropTypes.array.isRequired,
+  updateList: PropTypes.func.isRequired,
+  setSelected: PropTypes.func.isRequired,
 };
 
 export default EnhancedTableToolbar;

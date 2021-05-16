@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import { getExercises, getWorkoutDetails } from '../utils/axiosFunctions';
 import { useUser } from '../context/UserContext';
@@ -213,6 +214,13 @@ const AddWorkout = ({
       )}
     </Container>
   );
+};
+
+AddWorkout.propTypes = {
+  buttonText: PropTypes.string.isRequired,
+  buttonAction: PropTypes.func.isRequired,
+  workoutId: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  stateManagment: PropTypes.object,
 };
 
 export default AddWorkout;
