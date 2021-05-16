@@ -5,6 +5,7 @@ const routes = require('./routes');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const cors = require('cors');
+require('dotenv').config();
 const port = 3001;
 
 // express server middlewars
@@ -21,7 +22,7 @@ app.use(cookieParser());
 app.use(
   session({
     key: 'userId',
-    secret: 'AfekaHadas2021',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {

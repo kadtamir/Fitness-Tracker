@@ -1,13 +1,13 @@
 'use strict';
 const mysql = require('mysql');
-const config = require('./private');
-// config looks like this:
-// const config = {
-//   user: 'user',
-//   password: 'password',
-//   host: 'host',
-//   database: 'database',
-// };
+require('dotenv').config();
+
+const config = {
+  user: 'root',
+  password: process.env.MYSQL_PASSWORD,
+  host: 'localhost',
+  database: 'fitness',
+};
 
 class Server {
   // Server class to build and control the relational DB
