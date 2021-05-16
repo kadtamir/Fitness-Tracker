@@ -1,3 +1,4 @@
+'use strict';
 const config = {
   user: 'root',
   password: '2133213300',

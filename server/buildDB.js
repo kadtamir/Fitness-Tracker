@@ -1,3 +1,4 @@
+'use strict';
 const Server = require('./serverConfig');
 const tablesStruct = require('./tablesStruct');
 
