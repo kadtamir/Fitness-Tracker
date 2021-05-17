@@ -1,19 +1,32 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
-import { useUser } from '../context/UserContext';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Dashboard from './Dashboard';
+import Main from './Main';
 
-const Overview = (props) => {
-  const user = useUser();
+const useStyles = makeStyles((theme) => ({
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+}));
+
+const Overview = () => {
+  const classes = useStyles();
   return (
     <React.Fragment>
-      <Typography component="h2" variant="h6">
-        Hello User: {user.TID}
-      </Typography>
+      <Grid container spacing={5}>
+        <Grid item md={8} xs={12}>
+          <Grid item xs={12} className={classes.header}>
+            <Main />
+          </Grid>
+        </Grid>
+        <Grid item md={4} xs={12}>
+          <Dashboard />
+        </Grid>
+      </Grid>
     </React.Fragment>
   );
 };
-
-Overview.propTypes = {};
 
 export default Overview;

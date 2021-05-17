@@ -28,7 +28,7 @@ routes.get('/getAllWorkouts:ID', (req, res) => {
 // Get trainee Info
 routes.get('/getTrainee:ID', (req, res) => {
   const id = req.params.ID.slice(1); // Remove leading colon
-  const sqlSelect = `SELECT * FROM fitness.trainee WHERE TID="${id}";`;
+  const sqlSelect = `SELECT t.*, Username from trainee t JOIN credentials ON UID=TID WHERE TID="${id}";`;
   s.db.query(sqlSelect, (err, data) => {
     if (err) res.send({ err, error: true });
     else res.send({ data, error: false });
@@ -109,6 +109,12 @@ routes.get('/login', (req, res) => {
   else res.send({ loggedIn: false });
 });
 
+// End session
+routes.post('/logout', (req, res) => {
+  req.session.destroy();
+  res.send('Logged out');
+});
+
 // Get all possible exercises
 routes.get('/getAllExercises', (req, res) => {
   const sqlSelect = 'SELECT EID,eType FROM exercise;';
@@ -187,6 +193,19 @@ routes.put('/workout/update', (req, res) => {
   ).format(
     'YYYY-MM-DD hh:mm:ss'
   )}",Duration=${duration},Distance=${distance}, Calories=${calories},Location="${location.toUpperCase()}",Feeling=${feeling} WHERE WID="${WID}";`;
+  s.db.query(sqlUpdate, (err, data) => {
+    if (err) res.send({ err, error: true });
+    else res.send({ data, error: false });
+  });
+});
+
+// Update trainee info
+routes.put('/trainee/update', (req, res) => {
+  const lastUpdate = moment().format('YYYY-MM-DD hh:mm:ss');
+  const { TID, weight, height, date, gender } = req.body;
+  const sqlUpdate = `UPDATE trainee SET birthDate="${moment(date).format(
+    'YYYY-MM-DD'
+  )}",Gender="${gender}",Weight=${weight},Height=${height}, lastUpdated="${lastUpdate}" WHERE TID="${TID}"`;
   s.db.query(sqlUpdate, (err, data) => {
     if (err) res.send({ err, error: true });
     else res.send({ data, error: false });

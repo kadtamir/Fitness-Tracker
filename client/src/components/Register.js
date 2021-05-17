@@ -1,7 +1,8 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 import { useUserUpdate } from '../context/UserContext';
-import { checkUsername, handleRegister } from '../utils/axiosFunctions';
+import { checkUsername } from '../utils/axiosFunctions';
 import { makeStyles } from '@material-ui/core/styles';
 import { Formik, Form, Field } from 'formik';
 import { Button, LinearProgress, Typography } from '@material-ui/core';
@@ -16,6 +17,9 @@ import MaleIcon from '../images/male.png';
 import FemaleIcon from '../images/female.png';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    textAlign: 'center',
+  },
   icons: {
     width: '50%',
   },
@@ -29,10 +33,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Register = () => {
+const Register = ({ buttonText, buttonAction, user }) => {
+  const updateUser = useUserUpdate();
   const classes = useStyles();
   const [taken, setTaken] = React.useState(false);
-  const updateUser = useUserUpdate();
   let timeout;
   const isTaken = async (text) => {
     if (timeout) clearTimeout(timeout);
@@ -43,24 +47,33 @@ const Register = () => {
   };
   return (
     <Formik
-      initialValues={{
-        username: '',
-        password: '',
-        weight: '',
-        height: '',
-        date: moment(),
-        gender: 'male',
-      }}
+      initialValues={
+        user
+          ? {
+              weight: user.Weight,
+              height: user.Height,
+              date: moment(user.birthDate),
+              gender: user.Gender,
+            }
+          : {
+              username: '',
+              password: '',
+              weight: '',
+              height: '',
+              date: moment(),
+              gender: 'Male',
+            }
+      }
       validate={(values) => {
         const errors = {};
-        if (!values.username) {
+        if (!user && !values.username) {
           errors.username = 'Required';
-        } else if (taken) {
+        } else if (!user && taken) {
           errors.username = 'Username is already taken';
         }
-        if (!values.password) {
+        if (!user && !values.password) {
           errors.password = 'Required';
-        } else if (values.password.length < 4) {
+        } else if (!user && values.password.length < 4) {
           errors.password = 'Password must be at least 4 characters';
         }
         if (!values.weight || values.weight < 1) {
@@ -75,32 +88,39 @@ const Register = () => {
         return errors;
       }}
       onSubmit={(values, { setSubmitting }) => {
-        handleRegister(values, setSubmitting, updateUser);
+        buttonAction(
+          { ...values, TID: user?.TID },
+          { setSubmitting, updateUser }
+        );
       }}
     >
       {({ submitForm, isSubmitting, setFieldValue, errors }) => (
         <MuiPickersUtilsProvider utils={MomentUtils}>
-          <Form>
-            <Box margin={1}>
-              <Field
-                component={TextField}
-                name="username"
-                type="text"
-                label="Username"
-                onChange={(e) => {
-                  isTaken(e.target.value);
-                  setFieldValue('username', e.target.value);
-                }}
-              />
-            </Box>
-            <Box margin={1}>
-              <Field
-                component={TextField}
-                type="password"
-                label="Password"
-                name="password"
-              />
-            </Box>
+          <Form className={classes.root}>
+            {!user && (
+              <Box margin={1}>
+                <Field
+                  component={TextField}
+                  name="username"
+                  type="text"
+                  label="Username"
+                  onChange={(e) => {
+                    isTaken(e.target.value);
+                    setFieldValue('username', e.target.value);
+                  }}
+                />
+              </Box>
+            )}
+            {!user && (
+              <Box margin={1}>
+                <Field
+                  component={TextField}
+                  type="password"
+                  label="Password"
+                  name="password"
+                />
+              </Box>
+            )}
             <Box margin={1}>
               <Field
                 component={TextField}
@@ -135,14 +155,14 @@ const Register = () => {
                 type="checkbox"
                 className={classes.icons}
               >
-                <ToggleButton value="male" aria-label="centered">
+                <ToggleButton value="Male" aria-label="centered">
                   <img
                     src={MaleIcon}
                     className={classes.gender}
                     alt="MaleIcon"
                   />
                 </ToggleButton>
-                <ToggleButton value="female" aria-label="centered">
+                <ToggleButton value="Female" aria-label="centered">
                   <img
                     src={FemaleIcon}
                     className={classes.gender}
@@ -159,7 +179,7 @@ const Register = () => {
                 onClick={submitForm}
                 className={classes.btn}
               >
-                Register
+                {buttonText}
               </Button>
             </Box>
           </Form>
@@ -167,6 +187,12 @@ const Register = () => {
       )}
     </Formik>
   );
+};
+
+Register.propTypes = {
+  buttonText: PropTypes.string.isRequired,
+  buttonAction: PropTypes.func.isRequired,
+  user: PropTypes.object,
 };
 
 export default Register;

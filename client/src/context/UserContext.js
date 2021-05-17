@@ -9,6 +9,7 @@ export const useUserUpdate = () => React.useContext(UserUpdateContext);
 export const UserProvider = ({ children }) => {
   const [user, setUser] = React.useState({
     TID: '',
+    userName: '',
     birthDate: null,
     Gender: '',
     Weight: null,

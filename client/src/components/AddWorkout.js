@@ -61,14 +61,14 @@ const AddWorkout = ({
   const [workoutDetails, setWorkoutDetails] = React.useState({});
   React.useEffect(() => {
     getExercises(setExerciseList);
-    if (workoutId !== 0) {
+    if (workoutId) {
       getWorkoutDetails(workoutId, setWorkoutDetails);
     }
   }, [workoutId]);
 
   return (
     <Container maxWidth="xs">
-      {exerciseList.length && (workoutDetails.select || workoutId === 0) ? (
+      {exerciseList.length && (workoutDetails.select || !workoutId) ? (
         <Formik
           initialValues={
             workoutId

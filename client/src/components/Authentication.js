@@ -1,4 +1,5 @@
 import React from 'react';
+import { handleRegister } from '../utils/axiosFunctions';
 import Logo from '../images/logo.JPG';
 import Login from './Login';
 import Register from './Register';
@@ -47,7 +48,11 @@ const Authentication = () => {
         <Button onClick={() => handleChange(false)}>Sign up</Button>
       </ButtonGroup>
       <Paper className={classes.container}>
-        {isRegistered ? <Login /> : <Register />}
+        {isRegistered ? (
+          <Login />
+        ) : (
+          <Register buttonText="Register" buttonAction={handleRegister} />
+        )}
       </Paper>
     </Container>
   );

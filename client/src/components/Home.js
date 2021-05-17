@@ -77,11 +77,7 @@ const Home = () => {
           <Workouts />
         </TabPanel>
         <TabPanel value={value} index={2}>
-          <AddWorkout
-            buttonText="Add Workout"
-            buttonAction={insertWorkout}
-            workoutId={0}
-          />
+          <AddWorkout buttonText="Add Workout" buttonAction={insertWorkout} />
         </TabPanel>
         <TabPanel value={value} index={3}>
           Calculator

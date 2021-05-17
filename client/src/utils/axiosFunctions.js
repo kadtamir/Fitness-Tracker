@@ -1,19 +1,18 @@
 import fitness from './axiosInstance';
-
-const calculateCalories = (weight, duration) => (3.5 * weight * duration) / 200;
+import { calculateCalories } from './helperFunctions';
 
 export const checkUsername = (text) => fitness.get(`/validate:${text}`);
 
-export const handleRegister = (values, setSubmitting, updateUser) => {
+export const handleRegister = (values, stateManagment) => {
   fitness
     .post('/register', values)
     .then((response) => {
-      setSubmitting(false);
-      updateUser(response.data.userId);
+      stateManagment.setSubmitting(false);
+      stateManagment.updateUser(response.data.userId);
     })
     .catch((error) => {
       alert(error);
-      setSubmitting(false);
+      stateManagment.setSubmitting(false);
     });
 };
 
@@ -127,4 +126,26 @@ export const updateWorkout = (values, user, stateManagment) => {
       alert(error);
       stateManagment.setSubmitting(false);
     });
+};
+
+export const updateTrainee = (values, stateManagment) => {
+  fitness
+    .put('/trainee/update', {
+      ...values,
+    })
+    .then(() => {
+      stateManagment.setSubmitting(false);
+      window.location.reload();
+    })
+    .catch((error) => {
+      alert(error);
+      stateManagment.setSubmitting(false);
+    });
+};
+
+export const logOut = () => {
+  fitness
+    .post('/logout')
+    .then(() => window.location.reload())
+    .catch((e) => alert(e));
 };
