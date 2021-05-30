@@ -4,6 +4,7 @@ import TabPanel from './TabPanel';
 import Overview from './Overview';
 import Workouts from './Workouts';
 import AddWorkout from './AddWorkout';
+import Admin from './Admin';
 import Logo from '../images/logo.JPG';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -84,7 +85,7 @@ const Home = () => {
           Calculator aa
         </TabPanel>
         <TabPanel value={value} index={4}>
-          Admin Panel
+          <Admin />
         </TabPanel>
       </Container>
     </React.Fragment>
