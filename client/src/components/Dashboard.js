@@ -39,6 +39,7 @@ const Dashboard = () => {
   const classes = useStyles();
   const bmi = calculateBMI(user.Weight, user.Height);
   const [editModalState, setEditModalState] = React.useState(false);
+  
   const updateInfo = () => setEditModalState(true);
   const handleClose = () => setEditModalState(false);
 

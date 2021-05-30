@@ -47,13 +47,13 @@ class DBBuildup extends Server {
       tablesStruct.exercise.featuresNames,
       tablesStruct.exercise.featuresTypes,
       [
-        [1, 'Walking', 3.3],
-        [2, 'Running', 12.5],
-        [3, 'Swimming ', 12],
-        [4, 'Tennis', 7],
-        [5, 'Football', 10],
-        [6, 'Basketball', 8],
-        [7, 'Volleyball', 8],
+        [1, "'Walking'", 3.3],
+        [2, "'Running'", 12.5],
+        [3, "'Swimming'", 12],
+        [4, "'Tennis'", 7],
+        [5, "'Football'", 10],
+        [6, "'Basketball'", 8],
+        [7, "'Volleyball'", 8],
       ]
     );
   }

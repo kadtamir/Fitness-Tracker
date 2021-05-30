@@ -66,6 +66,7 @@ const Home = () => {
               {...a11yProps(2)}
             />
             <Tab className={classes.tab} label="Calculator" {...a11yProps(3)} />
+            <Tab className={classes.tab} label="Admin" {...a11yProps(4)} />
           </Tabs>
         </Container>
       </AppBar>
@@ -80,7 +81,10 @@ const Home = () => {
           <AddWorkout buttonText="Add Workout" buttonAction={insertWorkout} />
         </TabPanel>
         <TabPanel value={value} index={3}>
-          Calculator
+          Calculator aa
+        </TabPanel>
+        <TabPanel value={value} index={4}>
+          Admin Panel
         </TabPanel>
       </Container>
     </React.Fragment>
