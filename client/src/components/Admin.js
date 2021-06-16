@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BasicTextFields() {
+const Admin = () => {
   const classes = useStyles();
   const [activityName, setActivityName] = React.useState('');
   const [met, setMet] = React.useState(0);
@@ -43,4 +43,6 @@ export default function BasicTextFields() {
       </Button>
     </form>
   );
-}
+};
+
+export default Admin;

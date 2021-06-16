@@ -5,6 +5,6 @@ const generateID = () =>
   //Generates hex ID, removes decorations and converts it to base 64 for shorter IDs
   Buffer.from(v4().replace('-', ''), 'hex')
     .toString('base64')
-    .replaceAll(/\//g, '0');
+    .replace(/\//g, '0');
 
 module.exports = generateID;

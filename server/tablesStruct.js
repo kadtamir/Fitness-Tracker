@@ -2,12 +2,11 @@
 const tablesStruct = {
   // One object to hold the tables structure with every table's details.
   credentials: {
-    featuresNames: ['UID', 'Username', 'Pass', 'isAdmin'],
+    featuresNames: ['UID', 'Username', 'Pass'],
     featuresTypes: [
       'VARCHAR(255)',
       'VARCHAR(255) UNIQUE',
       'VARCHAR(255) NOT NULL',
-      'BOOLEAN DEFAULT FALSE',
     ],
     pks: ['UID'],
     fks: [],
@@ -22,6 +21,7 @@ const tablesStruct = {
       'Weight',
       'Height',
       'lastUpdated',
+      'isAdmin',
     ],
     featuresTypes: [
       'VARCHAR(255)',
@@ -30,6 +30,7 @@ const tablesStruct = {
       'INT NOT NULL',
       'INT NOT NULL',
       'DATETIME',
+      'BOOLEAN DEFAULT FALSE',
     ],
     pks: ['TID'],
     fks: ['TID'],

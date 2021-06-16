@@ -38,8 +38,8 @@ routes.get('/getTrainee:ID', (req, res) => {
 // Check for valid username
 routes.get('/validate:USERNAME', (req, res) => {
   const username = req.params.USERNAME.slice(1); // Remove leading colon
-  const sqlSelect = `SELECT Username FROM credentials WHERE Username="${username}";`;
-  s.db.query(sqlSelect, (err, data) => {
+  const sqlSelect = `SELECT Username FROM credentials WHERE Username=?;`;
+  s.db.query(sqlSelect, username, (err, data) => {
     if (err) res.send({ err, error: true });
     else res.send({ data, error: false });
   });

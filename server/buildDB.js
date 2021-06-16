@@ -60,7 +60,6 @@ class DBBuildup extends Server {
 }
 
 const db = new DBBuildup(tablesStruct);
-// db.deleteAllTables();
 // db.createAllTables();
 
 module.exports = DBBuildup;

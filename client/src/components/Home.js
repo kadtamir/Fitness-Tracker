@@ -1,4 +1,5 @@
 import React from 'react';
+import { useUser } from '../context/UserContext';
 import { insertWorkout } from '../utils/axiosFunctions';
 import TabPanel from './TabPanel';
 import Overview from './Overview';
@@ -39,6 +40,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Home = () => {
+  const user = useUser();
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
   const handleChange = (_, newValue) => {
@@ -66,8 +68,9 @@ const Home = () => {
               label="Add Workout"
               {...a11yProps(2)}
             />
-            <Tab className={classes.tab} label="Calculator" {...a11yProps(3)} />
-            <Tab className={classes.tab} label="Admin" {...a11yProps(4)} />
+            {user.isAdmin && (
+              <Tab className={classes.tab} label="Admin" {...a11yProps(3)} />
+            )}
           </Tabs>
         </Container>
       </AppBar>
@@ -82,9 +85,6 @@ const Home = () => {
           <AddWorkout buttonText="Add Workout" buttonAction={insertWorkout} />
         </TabPanel>
         <TabPanel value={value} index={3}>
-          Calculator aa
-        </TabPanel>
-        <TabPanel value={value} index={4}>
           <Admin />
         </TabPanel>
       </Container>

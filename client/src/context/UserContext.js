@@ -15,6 +15,7 @@ export const UserProvider = ({ children }) => {
     Weight: null,
     Height: null,
     lastUpdated: null,
+    isAdmin: 0,
   });
   const updateUser = React.useCallback((newUser) => {
     contextUserUpdate(newUser, setUser);
