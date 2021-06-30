@@ -15,11 +15,11 @@ const s = new DBBuildup();
 // Get all workouts
 routes.get('/getAllWorkouts:ID', (req, res) => {
   const id = req.params.ID.slice(1); // Remove leading colon
-  const sqlSelect = `SELECT WID,wDate,eType,Duration,Distance,Calories,Location,Feeling FROM trainee t
+  const sqlSelect = `SELECT w.* FROM trainee t
   JOIN workout w ON t.TID = w.TID
   JOIN exercise e ON e.EID=w.EID
-  WHERE t.TID="${id}";`;
-  s.db.query(sqlSelect, (err, data) => {
+  WHERE t.TID=?;`;
+  s.db.query(sqlSelect, [id], (err, data) => {
     if (err) res.send({ err, error: true });
     else res.send({ data, error: false });
   });
@@ -178,7 +178,7 @@ routes.post('/workout/insert', (req, res) => {
 routes.delete('/workout/delete', (req, res) => {
   const rowsIds = req.body.map((id) => `"${id}"`).join(',');
   const sqlDelete = `DELETE FROM workout WHERE WID IN (${rowsIds});`;
-  s.db.query(sqlDelete, (err, data) => {
+  s.db.query(sqlDelete, [rowsIds], (err, data) => {
     if (err) res.send({ err, error: true });
     else res.send({ data, error: false });
   });
@@ -207,6 +207,54 @@ routes.put('/trainee/update', (req, res) => {
     'YYYY-MM-DD'
   )}",Gender="${gender}",Weight=${weight},Height=${height}, lastUpdated="${lastUpdate}" WHERE TID="${TID}"`;
   s.db.query(sqlUpdate, (err, data) => {
+    if (err) res.send({ err, error: true });
+    else res.send({ data, error: false });
+  });
+});
+
+// Admin add new exercise
+routes.post('/admin/insertExercise', (req, res) => {
+  const { activityName, met } = req.body;
+  const sqlInsert = 'INSERT INTO exercise (eType, MET) VALUES (?,?)';
+  s.db.query(sqlInsert, [activityName, met], (error, result) => {
+    if (error) {
+      res.send({ error, err: true });
+      return;
+    } else {
+      res.send({ result, error: false });
+    }
+  });
+});
+
+// Admin setAdmin
+routes.put('/admin/setAdmin', (req, res) => {
+  const { userId, admin } = req.body;
+  const sqlInsert = 'UPDATE trainee SET isAdmin = ? WHERE TID=?';
+  s.db.query(sqlInsert, [admin, userId], (error, result) => {
+    if (error) {
+      res.send({ error, err: true });
+      return;
+    } else {
+      res.send({ result, error: false });
+    }
+  });
+});
+
+// Get workout count
+routes.get('/total/workouts:ID', (req, res) => {
+  const id = req.params.ID.slice(1); // Remove leading colon
+  const sqlSelect = `SELECT COUNT(*) as totalWorkouts FROM workout WHERE TID="${id}";`;
+  s.db.query(sqlSelect, (err, data) => {
+    if (err) res.send({ err, error: true });
+    else res.send({ data, error: false });
+  });
+});
+
+// Get total distance
+routes.get('/total/distance:ID', (req, res) => {
+  const id = req.params.ID.slice(1); // Remove leading colon
+  const sqlSelect = `SELECT SUM(distance) as totalDistance FROM workout WHERE TID="${id}";`;
+  s.db.query(sqlSelect, (err, data) => {
     if (err) res.send({ err, error: true });
     else res.send({ data, error: false });
   });

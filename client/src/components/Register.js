@@ -125,7 +125,7 @@ const Register = ({ buttonText, buttonAction, user }) => {
               <Field
                 component={TextField}
                 type="number"
-                label="Weight"
+                label="Weight[kg]"
                 name="weight"
               />
             </Box>
@@ -133,7 +133,7 @@ const Register = ({ buttonText, buttonAction, user }) => {
               <Field
                 component={TextField}
                 type="number"
-                label="Height"
+                label="Height[cm]"
                 name="height"
               />
             </Box>

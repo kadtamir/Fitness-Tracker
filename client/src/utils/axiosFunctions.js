@@ -149,3 +149,37 @@ export const logOut = () => {
     .then(() => window.location.reload())
     .catch((e) => alert(e));
 };
+
+export const insertExercise = (activityName, met) => {
+  fitness
+    .post('/admin/insertExercise', {
+      activityName,
+      met,
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+
+export const setIsAdmin = (userId, admin) => {
+  fitness
+    .put('/admin/setAdmin', {
+      userId,
+      admin,
+    })
+    .catch((error) => {
+      alert(error);
+    });
+};
+
+export const getTotalworkouts = (userId, setTotalWorkouts) => {
+  fitness.get(`/total/workouts:${userId}`).then((res) => {
+    setTotalWorkouts(res.data.data[0].totalWorkouts);
+  });
+};
+
+export const getTotaldistance = (userId, setTotaldistance) => {
+  fitness.get(`/total/distance:${userId}`).then((res) => {
+    setTotaldistance(res.data.data[0].totalDistance);
+  });
+};
